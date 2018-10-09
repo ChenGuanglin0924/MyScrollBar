@@ -1,0 +1,70 @@
+/*
+* 禁止选中文本
+*/
+.no-select {
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    user-select:none;    
+}
+
+/*
+* 滚动条容器
+*/
+.my-scrollbar-container {
+    position: relative;
+}
+
+.my-scrollbar-content {
+    position: absolute;
+    overflow: hidden;
+    /* box-sizing: border-box; */
+    margin-right: 10px;
+}
+
+.my-scrollbar-container .my-scrollbar-y {
+    position: absolute;
+    right: 2px;
+    height: 100%;
+}
+
+.my-scrollbar-container .my-scrollbar-y .y-slider {
+    position: relative;
+    background-color: #aaa;
+    border-radius: 6px;
+    width: 6px;
+    height: 20%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+}
+
+.my-scrollbar-container .my-scrollbar-x {
+    position: absolute;
+    bottom: 2px;
+    width: 100%;
+}
+
+.my-scrollbar-container .my-scrollbar-x .x-slider {
+    background-color: #aaa;
+    border-radius: 6px;
+    height: 6px;
+    width: 20%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+}
+
+.my-scrollbar-container:hover .slider-enable {
+    opacity: 0.6;
+    transition: opacity .5s ease;
+}
+
+.my-scrollbar-container .slider-enable:hover {
+    opacity: 1;
+    transition: opacity .5s ease;
+}
+
+.my-scrollbar-container .slider-active {
+    opacity: 1 !important;
+    transition: opacity .5s ease;
+}
