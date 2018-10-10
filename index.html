@@ -77,24 +77,96 @@
             </p>
         </div>
     </div>
+    <button id="add1">增加1</button>
+    <button id="add2">增加2</button>
+    <button id="add">增加</button>
+    <button id="destroy1">销毁1</button>
+    <button id="destroy2">销毁2</button>
+    <button id="destroy3">销毁3</button>
+    <button id="destroyall">销毁all</button>
+    <button id="init1">加载1</button>
+    <button id="init2">加载2</button>
+    <button id="init3">加载3</button>
+    <button id="initall">加载all</button>
 </body>
 <script>
-    
-    new MyScrollBar(document.querySelector(".content1"), {
+    let content1 = new MyScrollBar(document.querySelector(".content1"), {
         scrollSpeed: 50,
         xScrollBarEnable: true,
         yScrollBarEnable: true,
         wheelPropagation: false
-    }).init();
-    new MyScrollBar(document.querySelector(".content2"), {
+    });
+    content1.init();
+
+    let content2 = new MyScrollBar(document.querySelector(".content2"), {
         scrollSpeed: 10,
         xScrollBarEnable: true,
         yScrollBarEnable: true
-    }).init();
-    new MyScrollBar(document.querySelector(".content"), {
+    });
+    content2.init();
+
+    let content = new MyScrollBar(document.querySelector(".content"), {
         scrollSpeed: 50,
         xScrollBarEnable: true,
         yScrollBarEnable: true
-    }).init();
+    });
+    content.init();
+
+    let n = 10;
+    document.getElementById("add1").addEventListener("click", function() {
+        let item = document.createElement("img");
+        item.setAttribute("src", "./images/1.jpg");
+        content1.addItem(item);
+    }, false);
+
+    document.getElementById("add2").addEventListener("click", function() {
+        let item = document.createElement("div");
+        item.className = "item";
+        item.innerText = n++;
+        content2.addItem(item);
+    }, false);
+
+    document.getElementById("add").addEventListener("click", function() {
+        let item = document.createElement("p");
+        item.innerText = "zzq";
+        content.addItem(item);
+    }, false);
+
+    document.getElementById("destroy1").addEventListener("click", function() {
+        content1.destroy();
+    }, false);
+
+    document.getElementById("destroy2").addEventListener("click", function() {
+        content2.destroy();
+    }, false);
+
+    document.getElementById("destroy3").addEventListener("click", function() {
+        content.destroy();
+    }, false);
+
+    document.getElementById("destroyall").addEventListener("click", function() {
+        content1.destroy();
+        content2.destroy();
+        content.destroy();
+    }, false);
+
+    document.getElementById("init1").addEventListener("click", function() {
+        content1.init();
+    }, false);
+
+    document.getElementById("init2").addEventListener("click", function() {
+        content2.init();
+    }, false);
+
+    document.getElementById("init3").addEventListener("click", function() {
+        content.init();
+    }, false);
+
+    document.getElementById("initall").addEventListener("click", function() {
+        content.init();
+        content1.init();
+        content2.init();
+    }, false);
+    
 </script>
 </html>

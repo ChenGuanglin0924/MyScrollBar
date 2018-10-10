@@ -27,6 +27,16 @@
          * 渲染DOM
          */
         renderDOM: function() {
+            //移动端时暂时使用默认滚动条
+            //todo 移动端滚动事件touch
+            if (this.getDeviceType() === "MOBILE") {
+                this.target.style.overflow = "auto";
+                return;
+            }
+            if (this.target.className.indexOf("my-scrollbar-content") > -1) {
+                return;
+            }
+            this.target.style.overflow = "hidden";
             //滚动条容器
             let container = doc.createElement("div");
             container.className = "my-scrollbar-container";
@@ -40,9 +50,8 @@
                 parentDIV.insertBefore(container, nextDIV);
             }
             this.target.className += " my-scrollbar-content";
-            // this.target.style.paddingRight = "10px";
             container.appendChild(this.target);
-            
+
             //生成横向滚动条并绑定事件
             this.options.xScrollBarEnable && this.createXScrollBar(container);
             //生成垂直滚动条并绑定事件
@@ -93,6 +102,8 @@
                     if (!me.options.wheelPropagation || content.scrollTop> 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
                         e.cancelBubble = true;
                     }
+                    //阻止浏览器默认事件
+                    return false;
                 });
             }
             else if (!isFF) //除火狐外的现代浏览器也使用MouseWheel事件
@@ -106,6 +117,8 @@
                     if (!me.options.wheelPropagation || content.scrollTop > 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
                         e.stopPropagation();
                     }
+                    //阻止浏览器默认事件
+                    e.preventDefault();
                 }, false);
             }
             else //火狐使用DOMMouseScroll事件
@@ -118,6 +131,8 @@
                     if (!me.options.wheelPropagation || content.scrollTop> 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
                         e.stopPropagation();
                     }
+                    //阻止浏览器默认事件
+                    e.preventDefault();
                 }, false);
             }
         },
@@ -209,6 +224,8 @@
                     if (!me.options.wheelPropagation || (content.scrollLeft > 0 && content.scrollLeft < content.scrollWidth - content.clientWidth)) {
                         e.cancelBubble = true;
                     }
+                    //阻止浏览器默认事件
+                    return false;
                 });
             }
             else if (!isFF) //除火狐外的现代浏览器也使用MouseWheel事件
@@ -222,6 +239,8 @@
                     if (!me.options.wheelPropagation || (content.scrollLeft > 0 && content.scrollLeft < content.scrollWidth - content.clientWidth)) {
                         e.stopPropagation();
                     }
+                    //阻止浏览器默认事件
+                    e.preventDefault();
                 }, true);
             }
             else //火狐使用DOMMouseScroll事件
@@ -234,6 +253,8 @@
                     if (!me.options.wheelPropagation || (content.scrollLeft > 0 && content.scrollLeft < content.scrollWidth - content.clientWidth)) {
                         e.stopPropagation();
                     }
+                    //阻止浏览器默认事件
+                    e.preventDefault();
                 }, false);
             }
         },
@@ -323,22 +344,40 @@
         },
 
         /**
+         * 动态添加元素
+         * @param {Element} elm
+         */
+        addItem: function(elm) {
+            this.target.appendChild(elm);
+            this.update();
+        },
+
+        /**
          * 更新滚动条
          */
         update: function() {
 
         },
-        /**
-         * 更新所有滚动条
-         */
-        updateAll: function() {
 
-        },
         /**
          * 销毁滚动条
          */
         destroy: function() {
-
+            if (this.target.className.indexOf("my-scrollbar-content") < 0) {
+                return;
+            }
+            this.removeClass(this.target, "my-scrollbar-content");
+            if (this.options.xScrollBarEnable) {
+                this.target.style.overflowX = "auto";
+            }
+            if (this.options.yScrollBarEnable) {
+                this.target.style.overflowY = "auto";
+            }
+            let parentNode = this.target.parentNode;
+            if (parentNode.parentNode) {
+                parentNode.parentNode.insertBefore(this.target, parentNode);
+                parentNode.parentNode.removeChild(this.target.nextSibling);
+            }
         },
         /**
          * 根据类名获取元素
@@ -354,6 +393,16 @@
             return isAll ? 
                 elm.getElementsByClassName(className) : 
                 elm.getElementsByClassName(className)[0];
+        },
+        /**
+         * 获取设备类型
+         */
+        getDeviceType: function() {
+            if(/Android|webOS|iPhone|iPod|BlackBerry|Mobile/i.test(navigator.userAgent)) {
+                return "MOBILE";
+            } else {
+                return "PC";
+            }
         }
     }
     //将ImageCarousel挂载在window全局

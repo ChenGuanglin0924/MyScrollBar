@@ -18,7 +18,7 @@
     position: absolute;
     overflow: hidden;
     /* box-sizing: border-box; */
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 .my-scrollbar-container .my-scrollbar-y {
