@@ -17,8 +17,6 @@
 .my-scrollbar-content {
     position: absolute;
     overflow: hidden;
-    /* box-sizing: border-box; */
-    /* margin-right: 10px; */
 }
 
 .my-scrollbar-container .my-scrollbar-y {
@@ -54,12 +52,22 @@
     cursor: pointer;
 }
 
-.my-scrollbar-container:hover .slider-enable {
+.my-scrollbar-container .support {
+    opacity: 0.6 !important;
+    transition: opacity .5s ease;
+}
+
+.my-scrollbar-container:hover .support {
+    opacity: 1 !important;
+    transition: opacity .5s ease;
+}
+
+.my-scrollbar-container:hover .enable {
     opacity: 0.6;
     transition: opacity .5s ease;
 }
 
-.my-scrollbar-container .slider-enable:hover {
+.my-scrollbar-container .enable:hover {
     opacity: 1;
     transition: opacity .5s ease;
 }
