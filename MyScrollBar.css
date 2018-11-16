@@ -2,9 +2,11 @@
 * 禁止选中文本
 */
 .no-select {
-    -moz-user-select:none;
-    -webkit-user-select:none;
-    user-select:none;    
+    -webkit-user-select: none; /*webkit浏览器*/
+    -khtml-user-select: none; /*早期浏览器*/
+    -moz-user-select: none; /*火狐*/
+    -ms-user-select: none; /*IE10*/
+    user-select: none; 
 }
 
 /*

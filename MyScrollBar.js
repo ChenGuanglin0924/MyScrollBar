@@ -1,4 +1,4 @@
-(function(win, doc) {
+(function (win, doc) {
     /**
      * 原生js滚动条插件
      * scrollSpeed      {number}  滚动速度
@@ -12,7 +12,7 @@
      * supportScroll    {boolean} 滚动条不消失
      * events           {array}   支持事件
      */
-    let MyScrollBar = function(target, options) {
+    let MyScrollBar = function (target, options) {
         let defaults = {
             scrollSpeed: 10,
             xScrollBarEnable: true,
@@ -26,20 +26,26 @@
             events: ["CLICK", "DRAG", "SCROLL"]
         };
         this.target = target;  //必须  需要创建滚动条的DOM元素
-        this.options = Object.assign({}, defaults, options);
+        this.options = {};
+        // this.options = Object.assign({}, defaults, options);
+        //ie 不支持Object.assign
+        for (let attr in defaults) {
+            this.options[attr] = options[attr] || defaults[attr];
+        }
     }
+
     MyScrollBar.prototype = {
         /**
          * 初始化函数
          */
-        init: function() {
+        init: function () {
             this.renderDOM();
             this.update();
         },
         /**
          * 渲染DOM
          */
-        renderDOM: function() {
+        renderDOM: function () {
             //移动端时暂时使用默认滚动条
             //todo 移动端滚动事件touch
             if (this.getDeviceType() === "MOBILE") {
@@ -75,7 +81,7 @@
         /**
          * 创建垂直滚动条
          */
-        createYScrollBar: function() {
+        createYScrollBar: function () {
             let scrollBarY = doc.createElement("div");
             scrollBarY.className = "my-scrollbar-y";
             let sliderY = doc.createElement("div");
@@ -89,8 +95,8 @@
 
             //容器可视高度小于实际高度时，再绑定事件
             if (this.target.clientHeight < this.target.scrollHeight) {
-                
-                
+
+
                 //绑定滚轮事件
                 if (this.options.events.indexOf("SCROLL") > -1) {
                     this.bindYWheelEvent();
@@ -105,13 +111,13 @@
         /**
          * 垂直滚动条滚轮事件
          */
-        bindYWheelEvent: function() {
+        bindYWheelEvent: function () {
             //判断浏览器
             let isIE = navigator.userAgent.match(/MSIE (\d)/i);
             isIE = isIE ? isIE[1] : undefined;
             let isFF = /FireFox/i.test(navigator.userAgent);
-            let content = this.target, 
-                sliderY = this.sliderY, 
+            let content = this.target,
+                sliderY = this.sliderY,
                 me = this;
             if (isIE < 9) //传统浏览器使用MouseWheel事件
             {
@@ -121,7 +127,7 @@
                     content.scrollTop += v;
                     sliderY.style.marginTop = (content.clientHeight - sliderY.clientHeight) * (content.scrollTop / (content.scrollHeight - content.clientHeight)) + "px";
                     //阻止冒泡
-                    if (!me.options.wheelPropagation || content.scrollTop> 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
+                    if (!me.options.wheelPropagation || content.scrollTop > 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
                         e.cancelBubble = true;
                     }
                     //阻止浏览器默认事件
@@ -150,7 +156,7 @@
                     content.scrollTop += e.detail / 3 * me.options.scrollSpeed;
                     sliderY.style.marginTop = (content.clientHeight - sliderY.clientHeight) * (content.scrollTop / (content.scrollHeight - content.clientHeight)) + "px";
                     //阻止冒泡
-                    if (!me.options.wheelPropagation || content.scrollTop> 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
+                    if (!me.options.wheelPropagation || content.scrollTop > 0 && (content.scrollTop < content.scrollHeight - content.clientHeight)) {
                         e.stopPropagation();
                     }
                     //阻止浏览器默认事件
@@ -162,30 +168,30 @@
         /**
          * 垂直滚动条点击事件
          */
-        bindYClickEvent: function() {
-            let content = this.target, 
-                scrollBarY = this.scrollBarY, 
-                sliderY = this.sliderY, 
+        bindYClickEvent: function () {
+            let content = this.target,
+                scrollBarY = this.scrollBarY,
+                sliderY = this.sliderY,
                 me = this;
             //点击和拖动事件  IE11、Chrome和Firefox测试OK
-            scrollBarY.onmousedown = function(e) {
+            scrollBarY.onmousedown = function (e) {
                 //判断鼠标点击元素  slider则为拖动，slider-bg则为点击
-                if(e.target.className === "my-scrollbar-y" && me.options.events.indexOf("CLICK") > -1) {
+                if (e.target.className === "my-scrollbar-y" && me.options.events.indexOf("CLICK") > -1) {
                     let yTop = 0;
-                    if(e.offsetY < scrollBarY.offsetHeight - sliderY.offsetHeight) {
+                    if (e.offsetY < scrollBarY.offsetHeight - sliderY.offsetHeight) {
                         yTop = e.offsetY;
                     }
-                    else if(e.offsetY < scrollBarY.offsetHeight) {
+                    else if (e.offsetY < scrollBarY.offsetHeight) {
                         yTop = e.offsetY - sliderY.offsetHeight;
                     }
                     sliderY.style.marginTop = yTop + "px";
                     content.scrollTop = (content.scrollHeight - content.clientHeight) * (yTop / (content.clientHeight - sliderY.clientHeight));
                 }
-                else if(me.options.events.indexOf("DRAG") > -1){
+                else if (me.options.events.indexOf("DRAG") > -1) {
                     me.addClass(doc.querySelector("body"), "no-select");
                     let top = e.clientY - sliderY.offsetTop;
-                    document.onmousemove = function(e) {
-                        me.addClass(sliderY, "active");
+                    document.onmousemove = function (e) {
+                        me.addClass(sliderY, "slider-active");
                         var yTop = e.clientY - top;
                         if (yTop <= 0) {
                             yTop = 0;
@@ -196,9 +202,9 @@
                         sliderY.style.marginTop = yTop + "px";
                         content.scrollTop = (content.scrollHeight - content.clientHeight) * (yTop / (content.clientHeight - sliderY.clientHeight));
                     }
-                    document.onmouseup = function (){
+                    document.onmouseup = function () {
                         document.onmousemove = null;
-                        me.removeClass(sliderY, "active");
+                        me.removeClass(sliderY, "slider-active");
                         me.removeClass(doc.querySelector("body"), "no-select");
                     }
                 }
@@ -208,7 +214,7 @@
         /**
          * 创建横向滚动条
          */
-        createXScrollBar: function() {
+        createXScrollBar: function () {
             let scrollBarX = doc.createElement("div");
             scrollBarX.className = "my-scrollbar-x";
             let sliderX = doc.createElement("div");
@@ -236,17 +242,17 @@
                 }
             }
         },
-        
+
         /**
          * 横向滚动条滚轮事件
          */
-        bindXWheelEvent: function() {
+        bindXWheelEvent: function () {
             //判断浏览器
             let isIE = navigator.userAgent.match(/MSIE (\d)/i);
             isIE = isIE ? isIE[1] : undefined;
             let isFF = /FireFox/i.test(navigator.userAgent);
-            let content = this.target, 
-                sliderX = this.sliderX, 
+            let content = this.target,
+                sliderX = this.sliderX,
                 me = this;
             if (isIE < 9) //传统浏览器使用MouseWheel事件
             {
@@ -297,30 +303,30 @@
         /**
          * 横向滚动条点击事件
          */
-        bindXClickEvent: function() {
-            let content = this.target, 
-                scrollBarX = this.scrollBarX, 
-                sliderX = this.sliderX, 
+        bindXClickEvent: function () {
+            let content = this.target,
+                scrollBarX = this.scrollBarX,
+                sliderX = this.sliderX,
                 me = this;
             //点击和拖动事件  IE11、Chrome和Firefox测试OK
-            scrollBarX.onmousedown = function(e) {
+            scrollBarX.onmousedown = function (e) {
                 //判断鼠标点击元素  slider则为拖动，slider-bg则为点击
-                if(e.target.className === "my-scrollbar-x" && me.options.events.indexOf("CLICK") > -1) {
+                if (e.target.className === "my-scrollbar-x" && me.options.events.indexOf("CLICK") > -1) {
                     let xLeft = 0;
-                    if(e.offsetX < scrollBarX.offsetWidth - sliderX.offsetWidth) {
+                    if (e.offsetX < scrollBarX.offsetWidth - sliderX.offsetWidth) {
                         xLeft = e.offsetX;
                     }
-                    else if(e.offsetX < scrollBarX.offsetWidth) {
+                    else if (e.offsetX < scrollBarX.offsetWidth) {
                         xLeft = e.offsetX - sliderX.offsetWidth;
                     }
                     sliderX.style.marginLeft = xLeft + "px";
                     content.scrollLeft = (content.scrollWidth - content.clientWidth) * (xLeft / (content.clientWidth - sliderX.clientWidth));
                 }
-                else if(me.options.events.indexOf("DRAG") > -1){
+                else if (me.options.events.indexOf("DRAG") > -1) {
                     me.addClass(doc.querySelector("body"), "no-select");
                     let left = e.clientX - sliderX.offsetLeft;
-                    document.onmousemove = function(e) {
-                        me.addClass(sliderX, "active");
+                    document.onmousemove = function (e) {
+                        me.addClass(sliderX, "slider-active");
                         var xLeft = e.clientX - left;
                         if (xLeft <= 0) {
                             xLeft = 0;
@@ -331,9 +337,9 @@
                         sliderX.style.marginLeft = xLeft + "px";
                         content.scrollLeft = (content.scrollWidth - content.clientWidth) * (xLeft / (content.clientWidth - sliderX.clientWidth));
                     }
-                    document.onmouseup = function (){
+                    document.onmouseup = function () {
                         document.onmousemove = null;
-                        me.removeClass(sliderX, "active");
+                        me.removeClass(sliderX, "slider-active");
                         me.removeClass(doc.querySelector("body"), "no-select");
                     }
                 }
@@ -345,7 +351,7 @@
          * @param {Element} elm 需要添加的DOM元素
          * @param {Number} idx 添加位置索引
          */
-        addItem: function(elm, idx) {
+        addItem: function (elm, idx) {
             if (!elm) {
                 return;
             }
@@ -354,7 +360,7 @@
                 if (children.length === 0 || idx === undefined) {
                     this.target.appendChild(elm);
                 }
-                else if(this.isNumber(idx) && children[parseInt(idx)]) {
+                else if (this.isNumber(idx) && children[parseInt(idx)]) {
                     this.target.parentNode.insertBefore(elm, children[parseInt(idx)]);
                 }
                 this.update();
@@ -367,7 +373,7 @@
          * 动态移除元素
          * @param {Number} idx 移除元素索引
          */
-        removeItem: function(idx) {
+        removeItem: function (idx) {
             let children = this.target.children;
             if (children.length === 0 || !this.isNumber(idx)) {
                 return;
@@ -383,7 +389,7 @@
         /**
          * 更新滚动条
          */
-        update: function() {
+        update: function () {
             //更新横向滚动条高度
             if (this.options.xScrollBarEnable) {
                 if (this.target.offsetWidth < this.target.scrollWidth) {
@@ -426,7 +432,7 @@
                         this.sliderY.style.marginTop = top + "px";
                         this.target.scrollTop = (this.target.scrollHeight - this.target.clientHeight) * (top / (this.target.clientHeight - this.sliderY.clientHeight));
                     }
-                    
+
                 }
                 else {
                     this.removeClass(this.sliderY, "enable");
@@ -438,7 +444,7 @@
         /**
          * 销毁滚动条
          */
-        destroy: function() {
+        destroy: function () {
             if (this.target.className.indexOf("my-scrollbar-content") < 0) {
                 return;
             }
@@ -461,7 +467,7 @@
          * @param {Element} element element
          * @param {String} 样式名
          */
-        addClass: function(element, className) {
+        addClass: function (element, className) {
             if (!element) {
                 return;
             }
@@ -477,7 +483,7 @@
          * @param {Element} element element
          * @param {String} 样式名
          */
-        removeClass: function(element, className) {
+        removeClass: function (element, className) {
             if (!element) {
                 return;
             }
@@ -493,16 +499,16 @@
          * @param {*} value
          * @returns {Boolean}
          */
-        isString: function(value) {
+        isString: function (value) {
             return (typeof value == 'string') && value.constructor == String;
         },
 
-         /**
-         * 否为数值
-         * @param {*} value
-         * @returns {Boolean}
-         */
-        isNumber: function(value) {
+        /**
+        * 否为数值
+        * @param {*} value
+        * @returns {Boolean}
+        */
+        isNumber: function (value) {
             return !isNaN(parseFloat(value));
         },
 
@@ -512,21 +518,21 @@
          * @param {Element} parent 父节点
          * @param {Boolean} isAll 是否取整个集合
          */
-        getElms: function(className, parent, isAll) {
+        getElms: function (className, parent, isAll) {
             if (!this.isString(className)) {
                 return null;
             }
             let elm = parent || doc;
-            return isAll ? 
-                elm.getElementsByClassName(className) : 
+            return isAll ?
+                elm.getElementsByClassName(className) :
                 elm.getElementsByClassName(className)[0];
         },
-        
+
         /**
          * 获取设备类型
          */
-        getDeviceType: function() {
-            if(/Android|webOS|iPhone|iPod|BlackBerry|Mobile/i.test(navigator.userAgent)) {
+        getDeviceType: function () {
+            if (/Android|webOS|iPhone|iPod|BlackBerry|Mobile/i.test(navigator.userAgent)) {
                 return "MOBILE";
             } else {
                 return "PC";
