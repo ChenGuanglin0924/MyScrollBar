@@ -1,0 +1,19 @@
+{
+  "name": "js-scrollbar",
+  "version": "1.0.0",
+  "description": "Native js scrollBar, support the current mainstream browser.",
+  "main": "js-scrollbar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://githjs-ub.com/ChenGuanglin0924/js-scrollbar.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChenGuanglin0924/js-scrollbar/issues"
+  },
+  "homepage": "https://github.com/ChenGuanglin0924/js-scrollbar#readme"
+}

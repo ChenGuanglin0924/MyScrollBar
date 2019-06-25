@@ -12,7 +12,7 @@
      * supportScroll    {boolean} 滚动条不消失
      * events           {array}   支持事件
      */
-    let MyScrollBar = function (target, options) {
+    let JSScrollBar = function (target, options) {
         let defaults = {
             scrollSpeed: 10,
             xScrollBarEnable: true,
@@ -34,7 +34,7 @@
         }
     }
 
-    MyScrollBar.prototype = {
+    JSScrollBar.prototype = {
         /**
          * 初始化函数
          */
@@ -540,5 +540,5 @@
         }
     }
     //将ImageCarousel挂载在window全局
-    window.MyScrollBar = MyScrollBar;
+    window.JSScrollBar = JSScrollBar;
 }(window, document))
